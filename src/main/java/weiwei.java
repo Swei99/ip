@@ -1,3 +1,6 @@
+import java.util.Locale;
+import java.util.Scanner;
+
 public class weiwei {
     public static void main(String[] args) {
         String logo =
@@ -9,7 +12,19 @@ public class weiwei {
         "___________________________________________________________\n";
 
         System.out.println("Hello im \n" + logo + "\nWhat can I do for you?\n");
-        System.out.println("Bye. Hope to see you again soon!");
+        Scanner sc = new Scanner(System.in);
+
+        while (true) {
+            String userInput = sc.nextLine().trim();
+
+            switch (userInput.toLowerCase(Locale.ROOT)) {
+            case "bye":     
+                System.out.println("\tBye. Hope to see you again soon!");
+                System.exit(0);
+            default:
+                System.out.println("\t"+userInput);
+            }
+        }
 
     }
 }

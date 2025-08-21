@@ -5,7 +5,7 @@ import java.util.List;
 
 public class weiwei {
     public static void main(String[] args) {
-        List<String> arrayList = new ArrayList<>();
+        List<Task> tasksList = new ArrayList<>();
 
         String logo =
         "__        __   _____    ___   __        __   _____    ___   \n" +
@@ -20,21 +20,66 @@ public class weiwei {
 
         while (true) {
             String userInput = sc.nextLine().trim();
+            String[] parts = userInput.split("\\s+", 2);
+            String cmd = parts[0];
 
-            switch (userInput) {
-            case "list":
-                int count = 1;
-                for (String item : arrayList) {
-                    System.out.println("\t" + count + ". " + item);
-                    count++;
+            switch (cmd) {
+                case "list":
+                    if (tasksList.isEmpty()) {
+                        System.out.println("\tThe list is empty");
+                        break;
+                    }
+                for (int i = 0; i < tasksList.size(); i++) {
+                    System.out.printf("\t%d.%s%n", i + 1, tasksList.get(i));
                 }
                 break;
-            case "bye":
-                System.out.println("\tBye. Hope to see you again soon!");
-                System.exit(0);
-            default:
-                System.out.println("\tadded: "+userInput);
-                arrayList.add(userInput);
+
+                case "mark": {
+                    if (parts.length < 2) { System.out.println("\tUsage: mark <number>"); break; }
+                    try {
+                        int index = Integer.parseInt(parts[1].trim());
+                            if (index < 1 || index > tasksList.size()) {
+                                System.out.println("\tInvalid index: " + index);
+                                break;
+                            }
+                        Task task = tasksList.get(index - 1);
+                        task.mark();
+                        System.out.println("\tNice! I've marked this task as done:");
+                        System.out.println("\t\t" + task.toString()); // e.g. [x] item 2
+                    } catch (NumberFormatException e) {
+                        System.out.println("\tPlease provide a valid number. Example: mark 2");
+                    }
+                    break;
+                }
+
+                case "unmark": {
+                    if (parts.length < 2) { System.out.println("\tUsage: unmark <number>"); break; }
+                    try {
+                        int index = Integer.parseInt(parts[1].trim());
+                        if (index < 1 || index > tasksList.size()) {
+                            System.out.println("\tInvalid index: " + index);
+                            break;
+                        }
+                        Task task = tasksList.get(index - 1);
+                        task.unmark();
+                        System.out.println("\tOK, I've marked this task as not done yet:");
+                        System.out.println("\t\t" + task.toString()); // e.g. [ ] item 2
+                    } catch (NumberFormatException e) {
+                        System.out.println("\tPlease provide a valid number. Example: unmark 2");
+                    }
+                    break;
+                }
+
+
+                case "bye": {
+                    System.out.println("\tBye. Hope to see you again soon!");
+                    System.exit(0);
+                }
+
+                default: {
+                    System.out.println("\tadded: "+userInput);
+                    tasksList.add(new Task(userInput));
+                }
             }
         }
     }

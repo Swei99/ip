@@ -112,6 +112,29 @@ public class weiwei {
                     break;
                 }
 
+                case "delete": {
+                    if (parts.length < 2) { 
+                        System.out.println("\tUsage: delete <number>");
+                        break; 
+                    }
+                    try {
+                        int index = Integer.parseInt(parts[1].trim());
+                        if (index < 1 || index > tasksList.size()) {
+                            System.out.println("\tInvalid index: " + index);
+                            break;
+                        }
+                        Task removed = tasksList.remove(index - 1);
+
+                        System.out.println("\tNoted. I've removed this task:");
+                        System.out.println("\t  " + removed);
+                        int n = tasksList.size();
+                        System.out.printf("\tNow you have %d tasks in the list.\n\n", n);
+                    } catch (NumberFormatException e) {
+                        System.out.println("\tPlease provide a valid number. Usage: delete 3\n");
+                    }
+                    break;
+                }
+
                 case "mark": {
                     if (parts.length < 2) { System.out.println("\tUsage: mark <number>"); break; }
                     try {

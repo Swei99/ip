@@ -157,8 +157,9 @@ public class weiwei {
                 }
 
                 default: {
-                    System.out.println("\tadded: "+userInput);
-                    tasksList.add(new Task(userInput));
+                    System.out.println("\tSorry, please use an appropriate command");
+                    System.out.println("\tCommands: \n\t todo <desc> \n\t deadline <desc> /by <when> \n\t event <desc> /from <start> /to <end> \n\t list \n\t mark <n> \n\t unmark <n> \n\t bye\n");
+
                 }
             }
         }

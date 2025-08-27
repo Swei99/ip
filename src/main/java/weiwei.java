@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class weiwei {
     private static final String LINE = "____________________________________________________________";
@@ -22,6 +26,8 @@ public class weiwei {
         "   \\_/\\_/     |_____|  |___|     \\_/\\_/     |_____|  |___|  \n";
     
     public static void main(String[] args) {
+        DateTimeFormatter ISO_DT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"); // e.g. 2025-08-30 1400
         Storage storage = new Storage("data", "data.txt");
         List<Task> tasksList = new ArrayList<>(storage.load());
         System.out.printf("(loaded %d %s)%n", tasksList.size(), tasksList.size() == 1 ? "task" : "tasks");
@@ -68,52 +74,111 @@ public class weiwei {
                 printAdded(tTodo, tasksList.size());
                 break;
 
-            case "deadline":
+            case "deadline": {
                 if (rest.isEmpty()) {
-                    System.out.println("\tUsage: deadline <description> /by <when>");
+                    System.out.println("\tUsage: deadline <desc> /by <d/M/yyyy HHmm | d/M/yyyy | yyyy-MM-dd HHmm | yyyy-MM-dd>");
                     break;
                 }
-                int byIdx = rest.toLowerCase(Locale.ROOT).indexOf("/by");
+
+                String restLower = rest.toLowerCase(Locale.ROOT);
+                int byIdx = restLower.indexOf("/by");
                 if (byIdx == -1) {
-                    System.out.println("\tUsage: deadline <description> /by <when>");
+                    System.out.println("\tUsage: deadline <desc> /by <d/M/yyyy HHmm | d/M/yyyy | yyyy-MM-dd HHmm | yyyy-MM-dd>");
                     break;
                 }
+
                 String dDesc = rest.substring(0, byIdx).trim();
-                String dBy = rest.substring(byIdx + 3).trim();
-                if (dDesc.isEmpty() || dBy.isEmpty()) {
-                    System.out.println("\tUsage: deadline <description> /by <when>");
+                String dByRaw = rest.substring(byIdx + 3).trim(); // 3 == "/by".length()
+                if (dDesc.isEmpty() || dByRaw.isEmpty()) {
+                    System.out.println("\tUsage: deadline <desc> /by <d/M/yyyy HHmm | d/M/yyyy | yyyy-MM-dd HHmm | yyyy-MM-dd>");
                     break;
                 }
-                Task tDeadline = new Deadline(dDesc, dBy);
+
+                // Try multiple accepted formats, in order.
+                DateTimeFormatter[] fmtsDateTime = new DateTimeFormatter[] {
+                    DateTimeFormatter.ofPattern("d/M/uuuu HHmm"),   // e.g. 2/12/2019 1800
+                    DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm")  // e.g. 2019-12-02 1800
+                };
+                DateTimeFormatter[] fmtsDateOnly = new DateTimeFormatter[] {
+                    DateTimeFormatter.ofPattern("d/M/uuuu"),        // e.g. 2/12/2019
+                    DateTimeFormatter.ISO_LOCAL_DATE                // e.g. 2019-12-02
+                };
+
+                LocalDateTime dBy = null;
+
+                // First, try date+time
+                for (DateTimeFormatter f : fmtsDateTime) {
+                    try {
+                        dBy = LocalDateTime.parse(dByRaw, f);
+                        break;
+                    } catch (DateTimeParseException ignore) { }
+                }
+                // Then, try date-only → default to 00:00
+                if (dBy == null) {
+                    for (DateTimeFormatter f : fmtsDateOnly) {
+                        try {
+                            dBy = LocalDate.parse(dByRaw, f).atStartOfDay();
+                            break;
+                        } catch (DateTimeParseException ignore) { }
+                    }
+                }
+
+                if (dBy == null) {
+                    System.out.println("\tInvalid date/time: \"" + dByRaw + "\"");
+                    System.out.println("\tAccepted formats: d/M/yyyy HHmm  |  yyyy-MM-dd HHmm  |  d/M/yyyy  |  yyyy-MM-dd");
+                    System.out.println("\tExamples: 2/12/2019 1800   or   2019-12-02 1800");
+                    break;
+                }
+
+                Task tDeadline = new Deadline(dDesc, dBy); // Deadline must take LocalDateTime
                 tasksList.add(tDeadline);
                 storage.save(tasksList);
                 printAdded(tDeadline, tasksList.size());
                 break;
+            }
 
-            case "event":
+            case "event": {
                 if (rest.isEmpty()) {
-                    System.out.println("\tUsage: event <description> /from <start> /to <end>");
+                    System.out.println("\tUsage: event <desc> /from <yyyy-MM-dd HHmm> /to <yyyy-MM-dd HHmm>");
                     break;
                 }
+
                 String lower = rest.toLowerCase(Locale.ROOT);
                 int fromIdx = lower.indexOf("/from");
-                int toIdx = lower.indexOf("/to", fromIdx + 5);
+                int toIdx   = lower.indexOf("/to", fromIdx + 5);
+
                 if (fromIdx == -1 || toIdx == -1 || toIdx <= fromIdx + 5) {
-                    System.out.println("\tUsage: event <description> /from <start> /to <end>");
+                    System.out.println("\tUsage: event <desc> /from <yyyy-MM-dd HHmm> /to <yyyy-MM-dd HHmm>");
                     break;
                 }
+
                 String eDesc = rest.substring(0, fromIdx).trim();
-                String eFrom = rest.substring(fromIdx + 5, toIdx).trim();
-                String eTo = rest.substring(toIdx + 3).trim();
-                if (eDesc.isEmpty() || eFrom.isEmpty() || eTo.isEmpty()) {
-                    System.out.println("\tUsage: event <description> /from <start> /to <end>");
+                String fromRaw = rest.substring(fromIdx + 5, toIdx).trim();
+                String toRaw   = rest.substring(toIdx   + 3).trim();
+
+                if (eDesc.isEmpty() || fromRaw.isEmpty() || toRaw.isEmpty()) {
+                    System.out.println("\tUsage: event <desc> /from <yyyy-MM-dd HHmm> /to <yyyy-MM-dd HHmm>");
                     break;
                 }
-                Task tEvent = new Event(eDesc, eFrom, eTo);
-                tasksList.add(tEvent);
-                storage.save(tasksList);
-                printAdded(tEvent, tasksList.size());
+
+                try {
+                    LocalDateTime from = LocalDateTime.parse(fromRaw, ISO_DT);
+                    LocalDateTime to   = LocalDateTime.parse(toRaw,   ISO_DT);
+
+                    if (to.isBefore(from)) {
+                        System.out.println("\tError: /to date-time is before /from.");
+                        break;
+                    }
+
+                    Task tEvent = new Event(eDesc, from, to);
+                    tasksList.add(tEvent);
+                    storage.save(tasksList);
+                    printAdded(tEvent, tasksList.size());
+                } catch (DateTimeParseException ex) {
+                    System.out.println("\tInvalid date-time. Use yyyy-MM-dd HHmm (e.g., 2025-08-30 1400).");
+                }
                 break;
+            }
 
             case "mark":
                 if (rest.isEmpty()) {

@@ -6,6 +6,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Storage for tasks. Uses a simple, portable, relative path (e.g. new Storage("data", "duke.txt")).
@@ -18,7 +21,9 @@ import java.util.List;
  *
  */
 public class Storage {
+    
     private final Path file;
+    private static final DateTimeFormatter FILE_DT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
     public Storage(String... pathSegments) {
         this.file = Paths.get("", pathSegments); // relative + OS-independent
@@ -85,19 +90,12 @@ public class Storage {
             return join("T", mark, t.getDescription());
         } else if (t instanceof Deadline) {
             Deadline d = (Deadline) t;
-            return join("D", mark, d.getDescription(), d.getBy());
+            return String.join(" | ", "D", mark, d.getDescription(), d.getBy().format(FILE_DT));
         } else if (t instanceof Event) {
             Event e = (Event) t;
-            // Store event time as a single, human-friendly range: "<from> to <to>"
-            String range = e.getFrom() == null ? "" : e.getFrom();
-            if (e.getTo() != null && !e.getTo().isEmpty()) {
-                if (!range.isEmpty()) {
-                    range = range + " to " + e.getTo();
-                } else {
-                    range = e.getTo(); // fallback if from was empty
-                }
-            }
-            return join("E", mark, e.getDescription(), range);
+            String from = e.getFrom() == null ? "" : e.getFrom().format(FILE_DT);
+            String to   = e.getTo()   == null ? "" : e.getTo().format(FILE_DT);
+            return join("E", mark, e.getDescription(), from, to);
         } else {
             // Fallback if new types are added later
             return join("U", mark, t.getDescription());
@@ -106,62 +104,46 @@ public class Storage {
 
     // Parse "T | 1 | read book" / "D | 0 | desc | by" / "E | 0 | desc | from to to" into a Task.
     private Task parseLine(String line) {
-        // Split by '|' without regex: allow optional spaces around separators.
+        // Split by '|' without regex; trims tokens.
         List<String> parts = splitByPipe(line);
         if (parts.size() < 3) {
             throw new IllegalArgumentException("Too few fields");
         }
 
         String type = parts.get(0).trim();
-        String mark = parts.get(1).trim();
+        boolean done = "1".equals(parts.get(1).trim());
         String desc = parts.get(2).trim();
-        boolean done = "1".equals(mark);
 
         Task t;
         switch (type) {
-            case "T": {
-                t = new Todo(desc);
-                break;
-            }
-            case "D": {
-                if (parts.size() < 4) {
-                    throw new IllegalArgumentException("Deadline missing /by");
-                }
-                String by = parts.get(3).trim();
-                t = new Deadline(desc, by);
-                break;
-            }
-            case "E": {
-                if (parts.size() < 4) {
-                    // allow events with missing range but still create something
-                    t = new Event(desc, "", "");
-                } else {
-                    String range = parts.get(3).trim();
-                    // Try to split the human-friendly range into from/to using simple rules
-                    String from = range;
-                    String to = "";
-                    String lower = range.toLowerCase();
+        case "T": {
+            t = new Todo(desc);
+            break;
+        }
+        case "D": {
+            if (parts.size() < 4) throw new IllegalArgumentException("Deadline missing /by");
+            LocalDateTime dt = LocalDateTime.parse(parts.get(3).trim(), FILE_DT);
+            t = new Deadline(desc, dt);
+            break;
+        }
+        case "E": {
+            String fromStr = parts.size() > 3 ? parts.get(3).trim() : "";
+            String toStr   = parts.size() > 4 ? parts.get(4).trim() : "";
 
-                    int toIdx = lower.indexOf(" to ");
-                    if (toIdx >= 0) {
-                        from = range.substring(0, toIdx).trim();
-                        to = range.substring(toIdx + 4).trim(); // 4 = " to ".length()
-                    } else {
-                        // fallback: split on the last '-' if present (e.g., "Aug 6th 2-4pm")
-                        int dash = range.lastIndexOf('-');
-                        if (dash > 0 && dash < range.length() - 1) {
-                            from = range.substring(0, dash).trim();
-                            to = range.substring(dash + 1).trim();
-                        }
-                    }
-                    t = new Event(desc, from, to);
-                }
-                break;
-            }
-            default: {
-                // Unknown type: treat as plain Task so the rest of the file still loads
-                t = new Task(desc);
-            }
+            LocalDateTime from = null;
+            LocalDateTime to   = null;
+
+            try { if (!fromStr.isEmpty()) from = LocalDateTime.parse(fromStr, FILE_DT); } catch (Exception ignore) {}
+            try { if (!toStr.isEmpty())   to   = LocalDateTime.parse(toStr,   FILE_DT); } catch (Exception ignore) {}
+
+            t = new Event(desc, from, to);
+            break;
+        }
+        default: {
+            // Unknown type: keep loading instead of failing the whole file
+            t = new Task(desc);
+            break;
+        }
         }
 
         if (done) {
@@ -171,6 +153,7 @@ public class Storage {
         }
         return t;
     }
+
 
     // Join fields as "A | B | C" with spaces for readability.
     private static String join(String... fields) {

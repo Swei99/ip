@@ -14,10 +14,8 @@ import weiweibot.parsers.DeadlineParser;
 import weiweibot.parsers.EventParser;
 import weiweibot.parsers.ToDoParser;
 import weiweibot.storage.Storage;
-import weiweibot.tasks.Task;
 import weiweibot.tasks.TaskList;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 

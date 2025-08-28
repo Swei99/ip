@@ -1,3 +1,5 @@
+package weiweibot.tasks;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -12,12 +14,11 @@ public class Deadline extends Task {
         this.by = by;
     }
 
-    public LocalDateTime getBy() {
-        return by;
-    }
+    public LocalDateTime getBy() { return by; }
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + by.format(OUT_FMT) + ")";
+        String pretty = by.format(OUT_FMT);
+        return "[D]" + super.toString() + " (by: " + pretty + ")";
     }
 }

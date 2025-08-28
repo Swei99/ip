@@ -1,34 +1,28 @@
 package weiweibot.commands;
 
 import weiweibot.storage.Storage;
-import weiweibot.tasks.Task;
+import weiweibot.tasks.TaskList;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class FindCommand extends Command {
     private final String needle;
 
     public FindCommand(String needle) {
-        this.needle = needle.toLowerCase(Locale.ROOT);
+        this.needle = needle;
     }
 
     @Override
-    public boolean execute(List<Task> tasks, Storage storage) {
-        List<String> hits = new ArrayList<>();
-        for (int i = 0; i < tasks.size(); i++) {
-            Task t = tasks.get(i);
-            if (t.getDescription().toLowerCase(Locale.ROOT).contains(needle)) {
-                hits.add(String.format("\t %d.%s", i + 1, t));
-            }
-        }
+    public boolean execute(TaskList tasks, Storage storage) {
+        List<Integer> indices = tasks.findIndicesByDescription(needle);
         System.out.println("\t" + LINE);
-        if (hits.isEmpty()) {
+        if (indices.isEmpty()) {
             System.out.println("\t No matching tasks found.");
         } else {
             System.out.println("\t Here are the matching tasks in your list:");
-            for (String s : hits) System.out.println(s);
+            for (Integer i : indices) {
+                System.out.printf("\t %d.%s%n", i + 1, tasks.getTask(i));
+            }
         }
         System.out.println("\t" + LINE);
         return false;

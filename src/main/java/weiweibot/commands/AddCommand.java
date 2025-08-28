@@ -2,8 +2,7 @@ package weiweibot.commands;
 
 import weiweibot.storage.Storage;
 import weiweibot.tasks.Task;
-
-import java.util.List;
+import weiweibot.tasks.TaskList;
 
 public class AddCommand extends Command {
     private final Task taskToAdd;
@@ -13,14 +12,14 @@ public class AddCommand extends Command {
     }
 
     @Override
-    public boolean execute(List<Task> tasks, Storage storage) {
-        tasks.add(taskToAdd);
+    public boolean execute(TaskList tasks, Storage storage) {
+        tasks.addTask(taskToAdd);
         storage.save(tasks);
         System.out.println("\t" + LINE);
         System.out.println("\t Got it. I've added this task:");
         System.out.println("\t   " + taskToAdd);
-        System.out.printf("\t Now you have %d %s in the list.%n",
-                tasks.size(), tasks.size() == 1 ? "task" : "tasks");
+        int n = tasks.getNumberOfTasks();
+        System.out.printf("\t Now you have %d %s in the list.%n", n, n == 1 ? "task" : "tasks");
         System.out.println("\t" + LINE);
         return false;
     }

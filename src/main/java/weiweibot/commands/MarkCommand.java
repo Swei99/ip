@@ -1,14 +1,12 @@
 package weiweibot.commands;
 
-import weiweibot.exceptions.WeiExceptions;
 import weiweibot.storage.Storage;
 import weiweibot.tasks.Task;
-
-import java.util.List;
+import weiweibot.tasks.TaskList;
 
 public class MarkCommand extends Command {
     private final int indexZeroBased;
-    private final boolean markValue; // true = mark, false = unmark
+    private final boolean markValue;
 
     public MarkCommand(int indexZeroBased, boolean markValue) {
         this.indexZeroBased = indexZeroBased;
@@ -16,14 +14,14 @@ public class MarkCommand extends Command {
     }
 
     @Override
-    public boolean execute(List<Task> tasks, Storage storage) {
-        if (indexZeroBased < 0 || indexZeroBased >= tasks.size()) {
-            throw new WeiExceptions("Invalid index: " + (indexZeroBased + 1));
+    public boolean execute(TaskList tasks, Storage storage) {
+        Task t = tasks.getTask(indexZeroBased);
+        if (markValue) {
+            t.mark();
+        } else {
+            t.unmark();
         }
-        Task t = tasks.get(indexZeroBased);
-        if (markValue) t.mark(); else t.unmark();
         storage.save(tasks);
-
         System.out.println("\t" + LINE);
         System.out.println(markValue
                 ? "\t Nice! I've marked this task as done:"

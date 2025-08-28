@@ -1,13 +1,11 @@
 package weiweibot.commands;
 
 import weiweibot.storage.Storage;
-import weiweibot.tasks.Task;
-
-import java.util.List;
+import weiweibot.tasks.TaskList;
 
 public class HelpCommand extends Command {
     @Override
-    public boolean execute(List<Task> tasks, Storage storage) {
+    public boolean execute(TaskList tasks, Storage storage) {
         System.out.println("\t" + LINE);
         System.out.println(
                 "\tCommands:\n" +

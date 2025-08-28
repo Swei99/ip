@@ -1,10 +1,8 @@
 package weiweibot.commands;
 
-import weiweibot.exceptions.WeiExceptions;
 import weiweibot.storage.Storage;
 import weiweibot.tasks.Task;
-
-import java.util.List;
+import weiweibot.tasks.TaskList;
 
 public class DeleteCommand extends Command {
     private final int indexZeroBased;
@@ -14,17 +12,14 @@ public class DeleteCommand extends Command {
     }
 
     @Override
-    public boolean execute(List<Task> tasks, Storage storage) {
-        if (indexZeroBased < 0 || indexZeroBased >= tasks.size()) {
-            throw new WeiExceptions("Invalid index: " + (indexZeroBased + 1));
-        }
-        Task removed = tasks.remove(indexZeroBased);
+    public boolean execute(TaskList tasks, Storage storage) {
+        Task removed = tasks.deleteTask(indexZeroBased);
         storage.save(tasks);
         System.out.println("\t" + LINE);
         System.out.println("\t Noted. I've removed this task:");
         System.out.println("\t   " + removed);
-        System.out.printf("\t Now you have %d %s in the list.%n",
-                tasks.size(), tasks.size() == 1 ? "task" : "tasks");
+        int n = tasks.getNumberOfTasks();
+        System.out.printf("\t Now you have %d %s in the list.%n", n, n == 1 ? "task" : "tasks");
         System.out.println("\t" + LINE);
         return false;
     }

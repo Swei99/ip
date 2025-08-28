@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import weiweibot.tasks.TaskList;
 
 
 public class Storage {
@@ -27,10 +28,10 @@ public class Storage {
         this.file = Paths.get("", pathSegments); // relative + OS-independent
     }
 
-    public List<Task> load() {
-        List<Task> tasks = new ArrayList<>();
+    public TaskList load() {
+        List<Task> list = new ArrayList<>();
         if (!Files.exists(file)) {
-            return tasks;
+            return new TaskList(list);
         }
         try (BufferedReader br = Files.newBufferedReader(file)) {
             String line;
@@ -38,25 +39,26 @@ public class Storage {
             while ((line = br.readLine()) != null) {
                 lineNo++;
                 String trimmed = line.trim();
-                if (trimmed.isEmpty()) continue;
+                if (trimmed.isEmpty()) {
+                    continue;
+                }
                 try {
-                    tasks.add(parseLine(trimmed));
+                    list.add(parseLine(trimmed));
                 } catch (RuntimeException ex) {
-                    // Use our exception but keep going
                     throw new WeiExceptions("Corrupted line " + lineNo + ": " + trimmed);
                 }
             }
         } catch (IOException e) {
             throw new WeiExceptions("Failed to load tasks: " + e.getMessage());
         }
-        return tasks;
+        return new TaskList(list);
     }
 
-    public void save(List<Task> tasks) {
+    public void save(TaskList tasks) {
         try {
             Files.createDirectories(file.getParent() != null ? file.getParent() : Paths.get("."));
             try (BufferedWriter bw = Files.newBufferedWriter(file)) {
-                for (Task t : tasks) {
+                for (Task t : tasks.asUnmodifiableList()) {
                     bw.write(serialize(t));
                     bw.newLine();
                 }

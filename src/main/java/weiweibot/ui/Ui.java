@@ -15,17 +15,20 @@ import weiweibot.parsers.EventParser;
 import weiweibot.parsers.ToDoParser;
 import weiweibot.storage.Storage;
 import weiweibot.tasks.Task;
+import weiweibot.tasks.TaskList;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
+
+
 public class Ui {
     private static final String LINE = "____________________________________________________________";
     private final Storage storage;
-    private final List<Task> tasks;
+    private final TaskList tasks;
 
-    public Ui(Storage storage, List<Task> tasks) {
+    public Ui(Storage storage, TaskList tasks) {
         this.storage = storage;
         this.tasks = tasks;
     }

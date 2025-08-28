@@ -71,9 +71,9 @@ public class Ui {
                             break;
 
                         case "find": {
-                            String needle = rest.trim();
-                            if (needle.isEmpty()) throw new WeiExceptions("Usage: find <keywords>");
-                            toRun = new FindCommand(needle);
+                            String data = rest.trim();
+                            if (data.isEmpty()) throw new WeiExceptions("Usage: find <keywords>");
+                            toRun = new FindCommand(data);
                             break;
                         }
 

@@ -8,6 +8,16 @@ import weiweibot.tasks.Deadline;
 import java.time.LocalDateTime;
 import java.util.Locale;
 
+/**
+ * Parses user input for the {@code deadline} command.
+ *
+ * <p>Expected format: {@code deadline <desc> /by <d-M-yyyy HHmm | d-M-yyyy>}.
+ * Splits on {@code /by}, parses the date/time using
+ * {@link Parser#parseFlexibleDateTime(String)}, and returns an
+ * {@link AddCommand} that adds a {@link Deadline}.</p>
+ *
+ * <p>Validation: throws {@link WeiExceptions} if the syntax is missing or invalid.</p>
+ */
 public class DeadlineParser extends Parser {
     @Override
     public Command parse(String args) {

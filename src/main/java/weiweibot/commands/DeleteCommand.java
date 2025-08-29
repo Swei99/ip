@@ -4,6 +4,16 @@ import weiweibot.storage.Storage;
 import weiweibot.tasks.Task;
 import weiweibot.tasks.TaskList;
 
+
+/**
+ * Deletes the task at a given zero-based index and saves the updated list.
+ *
+ * <p>Side effects: removes an item from {@link TaskList}, calls
+ * {@link Storage#save(TaskList)}, and prints a short confirmation message.</p>
+ *
+ * <p>Errors from {@link TaskList#deleteTask(int)} (e.g., out-of-bounds) are
+ * propagated to the caller.</p>
+ */
 public class DeleteCommand extends Command {
     private final int indexZeroBased;
 

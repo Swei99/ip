@@ -19,7 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 import weiweibot.tasks.TaskList;
 
-
+/**
+ * File-backed storage for tasks using a simple line-based format.
+ *
+ * <p>The path is constructed from the provided segments (relative and
+ * OS-independent). Each task is stored on one line and reconstructed on load.</p>
+ */
 public class Storage {
     private final Path file;
     private static final DateTimeFormatter FILE_DT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
@@ -28,6 +33,15 @@ public class Storage {
         this.file = Paths.get("", pathSegments); // relative + OS-independent
     }
 
+    /**
+     * Loads tasks from the backing file if it exists.
+     *
+     * <p>Blank lines are ignored. If a line cannot be parsed, a {@link WeiExceptions}
+     * is thrown indicating the corrupted line number.</p>
+     *
+     * @return a {@link TaskList} containing the parsed tasks (empty if file absent)
+     * @throws WeiExceptions on I/O errors or malformed records
+     */
     public TaskList load() {
         List<Task> list = new ArrayList<>();
         if (!Files.exists(file)) {
@@ -54,6 +68,12 @@ public class Storage {
         return new TaskList(list);
     }
 
+    /**
+     * Saves all tasks to the backing file, creating parent directories if needed.
+     *
+     * @param tasks the tasks to persist
+     * @throws WeiExceptions on I/O errors
+     */
     public void save(TaskList tasks) {
         try {
             Files.createDirectories(file.getParent() != null ? file.getParent() : Paths.get("."));
@@ -88,10 +108,6 @@ public class Storage {
     }
 
     private Task parseLine(String line) {
-        // Expected forms:
-        // T | 1 | description
-        // D | 0 | description | yyyy-MM-dd HHmm
-        // E | 1 | description | yyyy-MM-dd HHmm | yyyy-MM-dd HHmm
         String[] parts = line.split("\\|");
         List<String> tokens = new ArrayList<>();
         for (String p : parts) tokens.add(p.trim());

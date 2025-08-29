@@ -1,9 +1,21 @@
 package weiweibot.tasks;
 
+/**
+ * Base task model with a textual description and a completion flag.
+ *
+ * <p>Tasks start unmarked (not done). The string form is
+ * {@code "[x] <description>"} when marked, or {@code "[ ] <description>"}
+ * when unmarked.</p>
+ */
 public class Task {
     private String description;
     private boolean marked;
 
+    /**
+     * Creates a task with the given description; initial state is unmarked.
+     *
+     * @param description brief text describing the task
+     */
     public Task(String description) {
         this.description = description;
         this.marked = false;

@@ -5,11 +5,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class Event extends Task {
-    private final LocalDateTime from;
-    private final LocalDateTime to;
-
     private static final DateTimeFormatter OUT =
             DateTimeFormatter.ofPattern("MMM d yyyy h:mma", Locale.ENGLISH);
+
+    private final LocalDateTime from;
+    private final LocalDateTime to;
 
     public Event(String description, LocalDateTime from, LocalDateTime to) {
         super(description);

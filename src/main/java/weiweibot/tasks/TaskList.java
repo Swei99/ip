@@ -1,10 +1,10 @@
 package weiweibot.tasks;
 
-import weiweibot.exceptions.WeiExceptions;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import weiweibot.exceptions.WeiExceptions;
 
 /**
  * A container for {@link Task} objects that provides basic list operations.

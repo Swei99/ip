@@ -1,12 +1,5 @@
 package weiweibot.storage;
 
-import weiweibot.exceptions.WeiExceptions;
-
-import weiweibot.tasks.Task;
-import weiweibot.tasks.Todo;
-import weiweibot.tasks.Deadline;
-import weiweibot.tasks.Event;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -17,12 +10,18 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import weiweibot.exceptions.WeiExceptions;
+import weiweibot.tasks.Deadline;
+import weiweibot.tasks.Event;
+import weiweibot.tasks.Task;
 import weiweibot.tasks.TaskList;
+import weiweibot.tasks.Todo;
 
 
 public class Storage {
-    private final Path file;
     private static final DateTimeFormatter FILE_DT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+    private final Path file;
 
     public Storage(String... pathSegments) {
         this.file = Paths.get("", pathSegments); // relative + OS-independent
@@ -69,7 +68,8 @@ public class Storage {
     }
 
     private String serialize(Task t) {
-        String type, marked = t.isMarked() ? "1" : "0";
+        String type;
+        String marked = t.isMarked() ? "1" : "0";
         if (t instanceof Todo todo) {
             type = "T";
             return String.join(" | ", type, marked, todo.getDescription());
@@ -80,7 +80,7 @@ public class Storage {
         } else if (t instanceof Event e) {
             type = "E";
             String from = e.getFrom().format(FILE_DT);
-            String to   = e.getTo().format(FILE_DT);
+            String to = e.getTo().format(FILE_DT);
             return String.join(" | ", type, marked, e.getDescription(), from, to);
         } else {
             throw new WeiExceptions("Unknown task type for serialization: " + t.getClass());
@@ -88,44 +88,51 @@ public class Storage {
     }
 
     private Task parseLine(String line) {
-        // Expected forms:
-        // T | 1 | description
-        // D | 0 | description | yyyy-MM-dd HHmm
-        // E | 1 | description | yyyy-MM-dd HHmm | yyyy-MM-dd HHmm
         String[] parts = line.split("\\|");
         List<String> tokens = new ArrayList<>();
-        for (String p : parts) tokens.add(p.trim());
-
-        if (tokens.size() < 3) throw new WeiExceptions("Invalid record: " + line);
+        for (String p : parts) {
+            tokens.add(p.trim());
+        }
+        if (tokens.size() < 3) {
+            throw new WeiExceptions("Invalid record: " + line);
+        }
 
         String type = tokens.get(0);
         boolean marked = switch (tokens.get(1)) {
-            case "1", "x", "X", "true", "True" -> true;
-            case "0", "", "false", "False", " " -> false;
-            default -> throw new WeiExceptions("Invalid mark flag: " + tokens.get(1));
+        case "1", "x", "X", "true", "True" -> true;
+        case "0", "", "false", "False", " " -> false;
+        default -> throw new WeiExceptions("Invalid mark flag: " + tokens.get(1));
         };
         String desc = tokens.get(2);
 
         Task t;
         switch (type) {
-            case "T":
-                t = new Todo(desc);
-                break;
-            case "D":
-                if (tokens.size() < 4) throw new WeiExceptions("Missing deadline datetime");
-                LocalDateTime by = LocalDateTime.parse(tokens.get(3), FILE_DT);
-                t = new Deadline(desc, by);
-                break;
-            case "E":
-                if (tokens.size() < 5) throw new WeiExceptions("Missing event datetime range");
-                LocalDateTime from = LocalDateTime.parse(tokens.get(3), FILE_DT);
-                LocalDateTime to   = LocalDateTime.parse(tokens.get(4), FILE_DT);
-                t = new Event(desc, from, to);
-                break;
-            default:
-                throw new WeiExceptions("Unknown record type: " + type);
+        case "T":
+            t = new Todo(desc);
+            break;
+        case "D":
+            if (tokens.size() < 4) {
+                throw new WeiExceptions("Missing deadline datetime");
+            }
+            LocalDateTime by = LocalDateTime.parse(tokens.get(3), FILE_DT);
+            t = new Deadline(desc, by);
+            break;
+        case "E":
+            if (tokens.size() < 5) {
+                throw new WeiExceptions("Missing event datetime range");
+            }
+            LocalDateTime from = LocalDateTime.parse(tokens.get(3), FILE_DT);
+            LocalDateTime to = LocalDateTime.parse(tokens.get(4), FILE_DT);
+            t = new Event(desc, from, to);
+            break;
+        default:
+            throw new WeiExceptions("Unknown record type: " + type);
         }
-        if (marked) t.mark(); else t.unmark();
+        if (marked) {
+            t.mark();
+        } else {
+            t.unmark();
+        }
         return t;
     }
 }

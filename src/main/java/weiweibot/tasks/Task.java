@@ -9,12 +9,25 @@ public class Task {
         this.marked = false;
     }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getDescription() {
+        return description;
+    }
 
-    public boolean isMarked() { return marked; }
-    public void mark() { this.marked = true; }
-    public void unmark() { this.marked = false; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isMarked() {
+        return marked;
+    }
+
+    public void mark() {
+        this.marked = true;
+    }
+
+    public void unmark() {
+        this.marked = false;
+    }
 
     @Override
     public String toString() {

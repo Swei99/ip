@@ -1,8 +1,8 @@
 package weiweibot;
 
 import weiweibot.storage.Storage;
-import weiweibot.ui.Ui;
 import weiweibot.tasks.TaskList;
+import weiweibot.ui.Ui;
 
 public class WeiWeiBot {
     public static void main(String[] args) {

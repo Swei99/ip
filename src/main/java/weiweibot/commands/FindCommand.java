@@ -1,9 +1,9 @@
 package weiweibot.commands;
 
+import java.util.List;
+
 import weiweibot.storage.Storage;
 import weiweibot.tasks.TaskList;
-
-import java.util.List;
 
 public class FindCommand extends Command {
     private final String needle;

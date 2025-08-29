@@ -4,6 +4,16 @@ import weiweibot.storage.Storage;
 import weiweibot.tasks.Task;
 import weiweibot.tasks.TaskList;
 
+
+/**
+ * Adds a single {@link Task} to the list and saves the updated state.
+ *
+ * <p>Side effects: mutates the provided {@link TaskList}, calls
+ * {@link Storage#save(TaskList)}, and prints a short confirmation message.</p>
+ *
+ * <p>This command never requests program termination; {@link #execute(TaskList, Storage)}
+ * always returns {@code false}.</p>
+ */
 public class AddCommand extends Command {
     private final Task taskToAdd;
 

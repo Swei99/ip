@@ -5,6 +5,12 @@ import java.util.List;
 import weiweibot.storage.Storage;
 import weiweibot.tasks.TaskList;
 
+/**
+ * Searches for tasks whose descriptions match a query and prints the results.
+ *
+ * <p>Side effects: prints a formatted list of matches (or a "no matches" message).
+ * Does not modify {@link TaskList} and does not save.</p>
+ */
 public class FindCommand extends Command {
     private final String needle;
 

@@ -8,6 +8,17 @@ import weiweibot.commands.Command;
 import weiweibot.exceptions.WeiExceptions;
 import weiweibot.tasks.Event;
 
+/**
+ * Parses user input for the {@code event} command.
+ *
+ * <p>Expected format: {@code event <desc> /from <d-M-yyyy HHmm> /to <d-M-yyyy HHmm>}.
+ * Splits on {@code /from} and {@code /to}, parses both timestamps via
+ * {@link Parser#parseFlexibleDateTime(String)}, and returns an {@link AddCommand}
+ * that adds an {@link Event}.</p>
+ *
+ * <p>Validation: throws {@link WeiExceptions} if parts are missing/invalid, and requires
+ * that {@code /to} is after {@code /from}.</p>
+ */
 public class EventParser extends Parser {
     @Override
     public Command parse(String args) {

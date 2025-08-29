@@ -1,13 +1,15 @@
 package weiweibot.ui;
 
+import java.util.Locale;
+import java.util.Scanner;
+
+import weiweibot.commands.Command;
 import weiweibot.commands.DeleteCommand;
 import weiweibot.commands.ExitCommand;
 import weiweibot.commands.FindCommand;
 import weiweibot.commands.HelpCommand;
 import weiweibot.commands.ListCommand;
 import weiweibot.commands.MarkCommand;
-import weiweibot.commands.Command; 
-
 import weiweibot.exceptions.WeiExceptions;
 import weiweibot.parsers.CommandValidator;
 import weiweibot.parsers.DeadlineParser;
@@ -15,11 +17,6 @@ import weiweibot.parsers.EventParser;
 import weiweibot.parsers.ToDoParser;
 import weiweibot.storage.Storage;
 import weiweibot.tasks.TaskList;
-
-import java.util.Locale;
-import java.util.Scanner;
-
-
 
 public class Ui {
     private static final String LINE = "____________________________________________________________";
@@ -36,71 +33,77 @@ public class Ui {
         try (Scanner sc = new Scanner(System.in)) {
             while (true) {
                 String line = sc.nextLine().trim();
-                if (line.isEmpty()) continue;
-
+                if (line.isEmpty()) {
+                    continue;
+                }
                 String[] parts = line.split("\\s+", 2);
-                String cmd  = parts[0].toLowerCase(Locale.ROOT);
+                String cmd = parts[0].toLowerCase(Locale.ROOT);
                 String rest = parts.length > 1 ? parts[1] : "";
 
                 try {
                     Command toRun;
 
                     switch (cmd) {
-                        case "bye":
-                            toRun = new ExitCommand();
-                            break;
+                    case "bye":
+                        toRun = new ExitCommand();
+                        break;
 
-                        case "help":
-                            toRun = new HelpCommand();
-                            break;
+                    case "help":
+                        toRun = new HelpCommand();
+                        break;
 
-                        case "list":
-                            toRun = new ListCommand();
-                            break;
+                    case "list":
+                        toRun = new ListCommand();
+                        break;
 
-                        case "todo":
-                            toRun = new ToDoParser().parse(rest);
-                            break;
+                    case "todo":
+                        toRun = new ToDoParser().parse(rest);
+                        break;
 
-                        case "deadline":
-                            toRun = new DeadlineParser().parse(rest);
-                            break;
+                    case "deadline":
+                        toRun = new DeadlineParser().parse(rest);
+                        break;
 
-                        case "event":
-                            toRun = new EventParser().parse(rest);
-                            break;
+                    case "event":
+                        toRun = new EventParser().parse(rest);
+                        break;
 
-                        case "find": {
-                            String data = rest.trim();
-                            if (data.isEmpty()) throw new WeiExceptions("Usage: find <keywords>");
-                            toRun = new FindCommand(data);
-                            break;
+                    case "find": {
+                        String data = rest.trim();
+                        if (data.isEmpty()) {
+                            throw new WeiExceptions("Usage: find <keywords>");
                         }
+                        toRun = new FindCommand(data);
+                        break;
+                    }
 
-                        case "mark": {
-                            int idx = CommandValidator.parseIndex(rest);
-                            toRun = new MarkCommand(idx, true);
-                            break;
-                        }
+                    case "mark": {
+                        int idx = CommandValidator.parseIndex(rest);
+                        toRun = new MarkCommand(idx, true);
+                        break;
+                    }
 
-                        case "unmark": {
-                            int idx = CommandValidator.parseIndex(rest);
-                            toRun = new MarkCommand(idx, false);
-                            break;
-                        }
+                    case "unmark": {
+                        int idx = CommandValidator.parseIndex(rest);
+                        toRun = new MarkCommand(idx, false);
+                        break;
+                    }
 
-                        case "delete": {
-                            int idx = CommandValidator.parseIndex(rest);
-                            toRun = new DeleteCommand(idx);
-                            break;
-                        }
+                    case "delete": {
+                        int idx = CommandValidator.parseIndex(rest);
+                        toRun = new DeleteCommand(idx);
+                        break;
+                    }
 
-                        default:
-                            throw new WeiExceptions("Unknown command: " + cmd + ". Type 'help' to see available commands.");
+                    default:
+                        throw new WeiExceptions("Unknown command: " + cmd
+                            + ". Type 'help' to see available commands.");
                     }
 
                     boolean shouldExit = toRun.execute(tasks, storage);
-                    if (shouldExit) return;
+                    if (shouldExit) {
+                        return;
+                    }
 
                 } catch (WeiExceptions e) {
                     System.out.println("\t" + LINE);

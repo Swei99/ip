@@ -1,12 +1,12 @@
 package weiweibot.parsers;
 
+import java.time.LocalDateTime;
+import java.util.Locale;
+
 import weiweibot.commands.AddCommand;
 import weiweibot.commands.Command;
 import weiweibot.exceptions.WeiExceptions;
 import weiweibot.tasks.Deadline;
-
-import java.time.LocalDateTime;
-import java.util.Locale;
 
 public class DeadlineParser extends Parser {
     @Override

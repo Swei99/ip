@@ -18,7 +18,9 @@ public final class CommandValidator {
         }
         try {
             int oneBased = Integer.parseInt(raw.trim());
-            if (oneBased <= 0) throw new WeiExceptions("Index must be a positive integer.");
+            if (oneBased <= 0) {
+                throw new WeiExceptions("Index must be a positive integer.");
+            }
             return oneBased - 1;
         } catch (NumberFormatException ex) {
             throw new WeiExceptions("Please provide a valid number. Example: mark 2");

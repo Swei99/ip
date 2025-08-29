@@ -14,7 +14,7 @@ import weiweibot.tasks.Todo;
 class AddCommandTest {
 
     private static final class RecordingStorage extends Storage {
-        private boolean saved;
+        private boolean isSaved;
 
         RecordingStorage() {
             super("build", "test-tmp", "noop.txt");
@@ -22,7 +22,7 @@ class AddCommandTest {
 
         @Override
         public void save(TaskList tasks) {
-            this.saved = true; // record that save(...) was invoked
+            this.isSaved = true; // record that save(...) was invoked
         }
     }
 

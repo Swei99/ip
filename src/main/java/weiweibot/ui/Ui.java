@@ -18,9 +18,6 @@ import weiweibot.parsers.TodoParser;
 import weiweibot.storage.Storage;
 import weiweibot.tasks.TaskList;
 
-import java.util.Locale;
-import java.util.Scanner;
-
 /**
  * Console-based UI that reads user commands, delegates to parsers/commands,
  * handles user-facing errors, and prints responses.
@@ -82,9 +79,9 @@ public class Ui {
                         toRun = new ListCommand();
                         break;
 
-                        case "todo":
-                            toRun = new TodoParser().parse(rest);
-                            break;
+                    case "todo":
+                        toRun = new TodoParser().parse(rest);
+                        break;
 
                     case "deadline":
                         toRun = new DeadlineParser().parse(rest);

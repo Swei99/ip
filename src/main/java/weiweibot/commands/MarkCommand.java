@@ -35,7 +35,7 @@ public class MarkCommand extends Command {
      * @return {@code false} - this command never terminates the application
      */
     @Override
-    public boolean execute(TaskList tasks, Storage storage) {
+    public String execute(TaskList tasks, Storage storage) {
         Task t = tasks.getTask(indexZeroBased);
         if (markValue) {
             t.mark();
@@ -43,12 +43,12 @@ public class MarkCommand extends Command {
             t.unmark();
         }
         storage.save(tasks);
-        System.out.println("\t" + LINE);
-        System.out.println(markValue
-                ? "\t Nice! I've marked this task as done:"
-                : "\t OK, I've marked this task as not done yet:");
-        System.out.println("\t   " + t);
-        System.out.println("\t" + LINE);
-        return false;
+
+        StringBuilder returnString = new StringBuilder();
+        returnString.append(markValue
+                ? "\t Nice! I've marked this task as done:\n"
+                : "\t OK, I've marked this task as not done yet:\n");
+        returnString.append("\t   " + t + "\n");
+        return returnString.toString();
     }
 }

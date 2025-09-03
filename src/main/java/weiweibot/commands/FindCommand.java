@@ -12,25 +12,24 @@ import weiweibot.tasks.TaskList;
  * Does not modify {@link TaskList} and does not save.</p>
  */
 public class FindCommand extends Command {
-    private final String needle;
+    private final String keyword;
 
-    public FindCommand(String needle) {
-        this.needle = needle;
+    public FindCommand(String keyword) {
+        this.keyword = keyword;
     }
 
     @Override
-    public boolean execute(TaskList tasks, Storage storage) {
-        List<Integer> indices = tasks.findIndicesByDescription(needle);
-        System.out.println("\t" + LINE);
+    public String execute(TaskList tasks, Storage storage) {
+        List<Integer> indices = tasks.findIndicesByDescription(keyword);
+        StringBuilder returnString = new StringBuilder();
         if (indices.isEmpty()) {
-            System.out.println("\t No matching tasks found.");
+            returnString.append("\t No matching tasks found.");
         } else {
-            System.out.println("\t Here are the matching tasks in your list:");
+            returnString.append("\t Here are the matching tasks in your list:\n");
             for (Integer i : indices) {
-                System.out.printf("\t %d.%s%n", i + 1, tasks.getTask(i));
+                returnString.append(String.format("\t %d.%s%n", i + 1, tasks.getTask(i)));
             }
         }
-        System.out.println("\t" + LINE);
-        return false;
+        return returnString.toString();
     }
 }

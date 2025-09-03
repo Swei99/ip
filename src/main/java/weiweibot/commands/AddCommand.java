@@ -22,15 +22,14 @@ public class AddCommand extends Command {
     }
 
     @Override
-    public boolean execute(TaskList tasks, Storage storage) {
+    public String execute(TaskList tasks, Storage storage) {
         tasks.addTask(taskToAdd);
         storage.save(tasks);
-        System.out.println("\t" + LINE);
-        System.out.println("\t Got it. I've added this task:");
-        System.out.println("\t   " + taskToAdd);
+        StringBuilder returnString = new StringBuilder();
+        returnString.append("\t Got it. I've added this task:\n");
+        returnString.append("\t   " + taskToAdd + "\n");
         int n = tasks.getNumberOfTasks();
-        System.out.printf("\t Now you have %d %s in the list.%n", n, n == 1 ? "task" : "tasks");
-        System.out.println("\t" + LINE);
-        return false;
+        returnString.append(String.format("\t Now you have %d %s in the list.%n", n, n == 1 ? "task" : "tasks"));
+        return returnString.toString();
     }
 }

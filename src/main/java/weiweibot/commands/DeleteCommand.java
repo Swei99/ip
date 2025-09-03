@@ -22,15 +22,15 @@ public class DeleteCommand extends Command {
     }
 
     @Override
-    public boolean execute(TaskList tasks, Storage storage) {
+    public String execute(TaskList tasks, Storage storage) {
         Task removed = tasks.deleteTask(indexZeroBased);
         storage.save(tasks);
-        System.out.println("\t" + LINE);
-        System.out.println("\t Noted. I've removed this task:");
-        System.out.println("\t   " + removed);
+        StringBuilder returnString = new StringBuilder();
+        returnString.append("\t Noted. I've removed this task:\n");
+        returnString.append("\t   " + removed + "\n");
         int n = tasks.getNumberOfTasks();
-        System.out.printf("\t Now you have %d %s in the list.%n", n, n == 1 ? "task" : "tasks");
-        System.out.println("\t" + LINE);
-        return false;
+        returnString.append("\t Now you have " + n + " " + (n == 1 ? "task" : "tasks") + " in the list.\n");
+        return returnString.toString();
     }
+
 }

@@ -10,16 +10,14 @@ import weiweibot.tasks.TaskList;
  */
 public class ListCommand extends Command {
     @Override
-    public boolean execute(TaskList tasks, Storage storage) {
-        System.out.println("\t" + LINE);
+    public String execute(TaskList tasks, Storage storage) {
+        StringBuilder returnString = new StringBuilder();
         if (tasks.isEmpty()) {
-            System.out.println("\t Your list is empty.");
+            returnString.append("Your list is empty.");
         } else {
-            // indent TaskList's toString by one tab for each line
-            System.out.print("\t");
-            System.out.println(tasks.toString().replace("\n", "\n\t"));
+            returnString.append(tasks.toString());
         }
-        System.out.println("\t" + LINE);
-        return false;
+        returnString.append("\n");
+        return returnString.toString();
     }
 }

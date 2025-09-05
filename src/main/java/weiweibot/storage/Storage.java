@@ -28,6 +28,12 @@ public class Storage {
     private static final DateTimeFormatter FILE_DT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
     private final Path file;
 
+    /**
+     * Creates a Storage with a file path built from the given segments.
+     * <p>Segments are joined into a relative, platform-independent path.</p>
+     *
+     * @param pathSegments path parts (e.g., "data", "tasks.txt"); must not be null or empty
+     */
     public Storage(String... pathSegments) {
         assert pathSegments != null : "pathSegments must not be null";
         assert pathSegments.length > 0 : "pathSegments must be non-empty";
@@ -127,19 +133,19 @@ public class Storage {
         assert "T".equals(type) || "D".equals(type) || "E".equals(type)
             : "Unknown record type: " + type;
         boolean marked = switch (tokens.get(1)) {
-            case "1" -> true;
-            case "x" -> true;
-            case "X" -> true;
-            case "true" -> true;
-            case "True" -> true;
+        case "1" -> true;
+        case "x" -> true;
+        case "X" -> true;
+        case "true" -> true;
+        case "True" -> true;
 
-            case "0" -> false;
-            case "" -> false;
-            case "false" -> false;
-            case "False" -> false;
-            case " " -> false;
+        case "0" -> false;
+        case "" -> false;
+        case "false" -> false;
+        case "False" -> false;
+        case " " -> false;
 
-            default -> throw new WeiExceptions("Invalid mark flag: " + tokens.get(1));
+        default -> throw new WeiExceptions("Invalid mark flag: " + tokens.get(1));
         };
         String desc = tokens.get(2);
 

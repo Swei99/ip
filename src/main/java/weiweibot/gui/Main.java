@@ -15,7 +15,6 @@ public class Main extends Application {
     private WeiWeiBot weiBot = new WeiWeiBot();
     private Image introImage = new Image(this.getClass().getResourceAsStream("/images/comet.png"));
 
-
     @Override
     public void start(Stage stage) {
         try {

@@ -44,6 +44,7 @@ public class Storage {
      * @throws WeiExceptions on I/O errors or malformed records
      */
     public TaskList load() {
+        assert file != null : "backing file path must not be null";
         List<Task> list = new ArrayList<>();
         if (!Files.exists(file)) {
             return new TaskList(list);
@@ -76,6 +77,9 @@ public class Storage {
      * @throws WeiExceptions on I/O errors
      */
     public void save(TaskList tasks) {
+        assert tasks != null : "TaskList must not be null";
+        assert tasks.getNumberOfTasks() == tasks.asUnmodifiableList().size()
+            : "TaskList count and underlying list size mismatch";
         try {
             Files.createDirectories(file.getParent() != null ? file.getParent() : Paths.get("."));
             try (BufferedWriter bw = Files.newBufferedWriter(file)) {

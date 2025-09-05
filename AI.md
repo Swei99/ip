@@ -5,3 +5,6 @@ After knowing that AI does formatting pretty well, next i went to fix my formatt
 
 A-JUnit
 - Used GPT 5 Thinking to generate me various tasks based on the context of my code. Tests ran normally and expected everything to pass. It was comprehensive enough to give test cases that is relevant enough to test the program minimally. This saves me alot of time as test cases aside from edge cases due to how i wrote my program can be automated, some cases that is not general enough, GPT might not be able to catch it (i have not tried to prompt for edge cases).
+
+JavaDocs
+- Used GPT 5 Thinking to generate JavaDocs for those functions that i have not done.

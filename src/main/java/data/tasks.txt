@@ -1,0 +1,5 @@
+T | 1 | borrow book
+D | 0 | return book | 2019-12-02 1800
+D | 0 | return book | 2019-12-02 0000
+D | 1 | finish work | 2020-12-03 0000
+E | 1 | project meeting | 2000-12-31 0000 | 2000-12-31 0000

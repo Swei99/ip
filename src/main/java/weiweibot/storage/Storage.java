@@ -29,6 +29,8 @@ public class Storage {
     private final Path file;
 
     public Storage(String... pathSegments) {
+        assert pathSegments != null : "pathSegments must not be null";
+        assert pathSegments.length > 0 : "pathSegments must be non-empty";
         this.file = Paths.get("", pathSegments); // relative + OS-independent
     }
 
@@ -118,6 +120,8 @@ public class Storage {
         }
 
         String type = tokens.get(0);
+        assert "T".equals(type) || "D".equals(type) || "E".equals(type)
+            : "Unknown record type: " + type;
         boolean marked = switch (tokens.get(1)) {
         case "1", "x", "X", "true", "True" -> true;
         case "0", "", "false", "False", " " -> false;

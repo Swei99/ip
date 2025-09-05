@@ -29,6 +29,8 @@ public class Storage {
     private final Path file;
 
     public Storage(String... pathSegments) {
+        assert pathSegments != null : "pathSegments must not be null";
+        assert pathSegments.length > 0 : "pathSegments must be non-empty";
         this.file = Paths.get("", pathSegments); // relative + OS-independent
     }
 
@@ -42,6 +44,7 @@ public class Storage {
      * @throws WeiExceptions on I/O errors or malformed records
      */
     public TaskList load() {
+        assert file != null : "backing file path must not be null";
         List<Task> storageList = new ArrayList<>();
         if (!Files.exists(file)) {
             return new TaskList(storageList);
@@ -74,6 +77,9 @@ public class Storage {
      * @throws WeiExceptions on I/O errors
      */
     public void save(TaskList tasks) {
+        assert tasks != null : "TaskList must not be null";
+        assert tasks.getNumberOfTasks() == tasks.asUnmodifiableList().size()
+            : "TaskList count and underlying list size mismatch";
         try {
             Files.createDirectories(file.getParent() != null ? file.getParent() : Paths.get("."));
             try (BufferedWriter bufferedWriter = Files.newBufferedWriter(file)) {
@@ -118,6 +124,8 @@ public class Storage {
         }
 
         String type = tokens.get(0);
+        assert "T".equals(type) || "D".equals(type) || "E".equals(type)
+            : "Unknown record type: " + type;
         boolean marked = switch (tokens.get(1)) {
             case "1" -> true;
             case "x" -> true;

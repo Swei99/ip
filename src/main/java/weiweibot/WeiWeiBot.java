@@ -37,6 +37,7 @@ public class WeiWeiBot {
     }
 
     public String getResponse(String input) {
+        assert input != null : "Input must not be null";
         try {
             String[] parts = input.split("\\s+", 2);
             String cmd = parts[0].toLowerCase(Locale.ROOT);
@@ -56,6 +57,8 @@ public class WeiWeiBot {
     }
 
     private Command parseCommand(String cmd, String rest) throws WeiExceptions {
+        assert cmd != null : "Command must not be empty";
+
         Command toRun;
         switch (cmd) {
         case "bye":

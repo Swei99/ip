@@ -58,6 +58,9 @@ public class MainWindow extends AnchorPane {
         }
     }
 
+    /**
+     * Displays a welcome message from the bot in the dialog container.
+     */
     public void displayWelcome(String welcomeMessage, Image botImage) {
         dialogContainer.getChildren().add(
             DialogBox.getBotDialog(welcomeMessage, botImage)

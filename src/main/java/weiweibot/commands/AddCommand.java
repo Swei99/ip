@@ -26,8 +26,8 @@ public class AddCommand extends Command {
         tasks.addTask(taskToAdd);
         storage.save(tasks);
         StringBuilder returnString = new StringBuilder();
-        returnString.append("\t Got it. I've added this task:\n");
-        returnString.append("\t   " + taskToAdd + "\n");
+        returnString.append(" Got it. I've added this task:\n");
+        returnString.append(" " + taskToAdd + "\n");
         int n = tasks.getNumberOfTasks();
         returnString.append(String.format("\t Now you have %d %s in the list.%n", n, n == 1 ? "task" : "tasks"));
         return returnString.toString();

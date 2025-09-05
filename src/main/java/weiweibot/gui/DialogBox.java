@@ -14,6 +14,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
+/**
+ * A custom control that represents a dialog box in the user interface.
+ */
 public class DialogBox extends HBox {
     @FXML
     private Label dialog;

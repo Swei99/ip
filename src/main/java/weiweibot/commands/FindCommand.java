@@ -23,9 +23,9 @@ public class FindCommand extends Command {
         List<Integer> indices = tasks.findIndicesByDescription(keyword);
         StringBuilder returnString = new StringBuilder();
         if (indices.isEmpty()) {
-            returnString.append("\t No matching tasks found.");
+            returnString.append("No matching tasks found.");
         } else {
-            returnString.append("\t Here are the matching tasks in your list:\n");
+            returnString.append("Here are the matching tasks in your list:\n");
             for (Integer i : indices) {
                 returnString.append(String.format("\t %d.%s%n", i + 1, tasks.getTask(i)));
             }

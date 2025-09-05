@@ -66,14 +66,20 @@ public class TaskList {
      * Returns the indices (0-based) of tasks whose descriptions contain {@code query}, case-insensitive.
      */
     public List<Integer> findIndicesByDescription(String query) {
-        String needle = query == null ? "" : query.trim().toLowerCase();
+        String objectDescription;
+        if (query == null) {
+            objectDescription = "";
+        } else {
+            String trimmed = query.trim();
+            objectDescription = trimmed.toLowerCase();
+        }
         List<Integer> indices = new ArrayList<>();
-        if (needle.isEmpty()) {
+        if (objectDescription.isEmpty()) {
             return indices;
         }
         for (int i = 0; i < tasks.size(); i++) {
             String desc = tasks.get(i).getDescription();
-            if (desc != null && desc.toLowerCase().contains(needle)) {
+            if (desc != null && desc.toLowerCase().contains(objectDescription)) {
                 indices.add(i);
             }
         }
@@ -90,15 +96,15 @@ public class TaskList {
         if (tasks.isEmpty()) {
             return "Your list is empty.";
         }
-        StringBuilder sb = new StringBuilder();
+        StringBuilder returnString = new StringBuilder();
         for (int i = 0; i < tasks.size(); i++) {
-            sb.append(String.format(" %d.%s%n", i + 1, tasks.get(i)));
+            returnString.append(String.format(" %d.%s%n", i + 1, tasks.get(i)));
         }
         // Trim trailing newline for neat printing.
-        if (sb.length() > 0 && sb.charAt(sb.length() - 1) == '\n') {
-            sb.setLength(sb.length() - 1);
+        if (returnString.length() > 0 && returnString.charAt(returnString.length() - 1) == '\n') {
+            returnString.setLength(returnString.length() - 1);
         }
-        return sb.toString();
+        return returnString.toString();
     }
 
     private void checkIndex(int index) {

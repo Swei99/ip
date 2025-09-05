@@ -42,29 +42,29 @@ public class Storage {
      * @throws WeiExceptions on I/O errors or malformed records
      */
     public TaskList load() {
-        List<Task> list = new ArrayList<>();
+        List<Task> storageList = new ArrayList<>();
         if (!Files.exists(file)) {
-            return new TaskList(list);
+            return new TaskList(storageList);
         }
         try (BufferedReader br = Files.newBufferedReader(file)) {
             String line;
-            int lineNo = 0;
+            int lineNum = 0;
             while ((line = br.readLine()) != null) {
-                lineNo++;
+                lineNum++;
                 String trimmed = line.trim();
                 if (trimmed.isEmpty()) {
                     continue;
                 }
                 try {
-                    list.add(parseLine(trimmed));
+                    storageList.add(parseLine(trimmed));
                 } catch (RuntimeException ex) {
-                    throw new WeiExceptions("Corrupted line " + lineNo + ": " + trimmed);
+                    throw new WeiExceptions("Corrupted line " + lineNum + ": " + trimmed);
                 }
             }
         } catch (IOException e) {
             throw new WeiExceptions("Failed to load tasks: " + e.getMessage());
         }
-        return new TaskList(list);
+        return new TaskList(storageList);
     }
 
     /**
@@ -76,10 +76,10 @@ public class Storage {
     public void save(TaskList tasks) {
         try {
             Files.createDirectories(file.getParent() != null ? file.getParent() : Paths.get("."));
-            try (BufferedWriter bw = Files.newBufferedWriter(file)) {
+            try (BufferedWriter bufferedWriter = Files.newBufferedWriter(file)) {
                 for (Task t : tasks.asUnmodifiableList()) {
-                    bw.write(serialize(t));
-                    bw.newLine();
+                    bufferedWriter.write(serialize(t));
+                    bufferedWriter.newLine();
                 }
             }
         } catch (IOException e) {
@@ -119,40 +119,53 @@ public class Storage {
 
         String type = tokens.get(0);
         boolean marked = switch (tokens.get(1)) {
-        case "1", "x", "X", "true", "True" -> true;
-        case "0", "", "false", "False", " " -> false;
-        default -> throw new WeiExceptions("Invalid mark flag: " + tokens.get(1));
+            case "1" -> true;
+            case "x" -> true;
+            case "X" -> true;
+            case "true" -> true;
+            case "True" -> true;
+
+            case "0" -> false;
+            case "" -> false;
+            case "false" -> false;
+            case "False" -> false;
+            case " " -> false;
+
+            default -> throw new WeiExceptions("Invalid mark flag: " + tokens.get(1));
         };
         String desc = tokens.get(2);
 
-        Task t;
+        Task currentTask;
         switch (type) {
         case "T":
-            t = new Todo(desc);
+            currentTask = new Todo(desc);
             break;
+
         case "D":
             if (tokens.size() < 4) {
                 throw new WeiExceptions("Missing deadline datetime");
             }
             LocalDateTime by = LocalDateTime.parse(tokens.get(3), FILE_DT);
-            t = new Deadline(desc, by);
+            currentTask = new Deadline(desc, by);
             break;
+
         case "E":
             if (tokens.size() < 5) {
                 throw new WeiExceptions("Missing event datetime range");
             }
             LocalDateTime from = LocalDateTime.parse(tokens.get(3), FILE_DT);
             LocalDateTime to = LocalDateTime.parse(tokens.get(4), FILE_DT);
-            t = new Event(desc, from, to);
+            currentTask = new Event(desc, from, to);
             break;
+
         default:
             throw new WeiExceptions("Unknown record type: " + type);
         }
         if (marked) {
-            t.mark();
+            currentTask.mark();
         } else {
-            t.unmark();
+            currentTask.unmark();
         }
-        return t;
+        return currentTask;
     }
 }

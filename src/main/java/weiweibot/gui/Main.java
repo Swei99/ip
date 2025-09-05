@@ -10,6 +10,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import weiweibot.WeiWeiBot;
 
+/**
+ * Starts the JavaFX user interface for WeiWeiBot.
+ * <p>
+ * This class loads the main FXML layout, configures the primary window,
+ * connects the UI controller to the chatbot, and shows an initial greeting.
+ * Use {@code Application.launch(Main.class, args)} to run the app.
+ */
 public class Main extends Application {
 
     private WeiWeiBot weiBot = new WeiWeiBot();
@@ -23,7 +30,7 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
-            stage.setTitle("WeiWeiBot"); // Add window title
+            stage.setTitle("WeiWeiBot");
 
             stage.setMinHeight(220);
             stage.setMinWidth(417);

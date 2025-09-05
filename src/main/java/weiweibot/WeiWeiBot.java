@@ -24,11 +24,13 @@ import weiweibot.tasks.TaskList;
  * and starts the interactive loop.</p>
  */
 public class WeiWeiBot {
-    private String commandType;
     private Storage storage;
     private TaskList tasks;
     private boolean isExit;
 
+    /**
+     * Initializes the WeiWeiBot instance with storage and task list.
+     */
     public WeiWeiBot() {
         storage = new Storage("data", "tasks.txt");
         tasks = storage.load();
@@ -40,9 +42,8 @@ public class WeiWeiBot {
             String cmd = parts[0].toLowerCase(Locale.ROOT);
             String rest = parts.length > 1 ? parts[1] : "";
 
-            Command c = parseCommand(cmd, rest);
-            String exitString = c.execute(tasks, storage);
-            commandType = c.getClass().getSimpleName();
+            Command parsedCommand = parseCommand(cmd, rest);
+            String exitString = parsedCommand.execute(tasks, storage);
             isExit = cmd.equals("bye");
             return exitString;
         } catch (WeiExceptions e) {
@@ -113,9 +114,5 @@ public class WeiWeiBot {
                 + ". Type 'help' to see available commands.");
         }
         return toRun;
-    }
-
-    public String getCommandType() {
-        return commandType;
     }
 }

@@ -26,10 +26,10 @@ public class DeleteCommand extends Command {
         Task removed = tasks.deleteTask(indexZeroBased);
         storage.save(tasks);
         StringBuilder returnString = new StringBuilder();
-        returnString.append("\t Noted. I've removed this task:\n");
-        returnString.append("\t   " + removed + "\n");
+        returnString.append("Noted. I've removed this task:\n");
+        returnString.append(" " + removed + "\n");
         int n = tasks.getNumberOfTasks();
-        returnString.append("\t Now you have " + n + " " + (n == 1 ? "task" : "tasks") + " in the list.\n");
+        returnString.append("Now you have " + n + " " + (n == 1 ? "task" : "tasks") + " in the list.\n");
         return returnString.toString();
     }
 

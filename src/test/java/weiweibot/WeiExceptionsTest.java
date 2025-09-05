@@ -1,8 +1,8 @@
 package weiweibot;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
 
 import weiweibot.exceptions.WeiExceptions;
 import weiweibot.parsers.CommandValidator;

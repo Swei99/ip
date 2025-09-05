@@ -46,9 +46,9 @@ public class MarkCommand extends Command {
 
         StringBuilder returnString = new StringBuilder();
         returnString.append(markValue
-                ? "\t Nice! I've marked this task as done:\n"
-                : "\t OK, I've marked this task as not done yet:\n");
-        returnString.append("\t   " + t + "\n");
+                ? "Nice! I've marked this task as done:\n"
+                : "OK, I've marked this task as not done yet:\n");
+        returnString.append(" " + t + "\n");
         return returnString.toString();
     }
 }

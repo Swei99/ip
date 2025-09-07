@@ -23,6 +23,9 @@ public class AddCommand extends Command {
 
     @Override
     public String execute(TaskList tasks, Storage storage) {
+        if (tasks.isDuplicate(taskToAdd)) {
+            return "Duplicate task detected. It would not be added:\n  " + taskToAdd;
+        }
         tasks.addTask(taskToAdd);
         storage.save(tasks);
         StringBuilder returnString = new StringBuilder();

@@ -91,6 +91,40 @@ public class TaskList {
         return Collections.unmodifiableList(tasks);
     }
 
+    public boolean isDuplicate(Task incomingTask) {
+        if (incomingTask == null) {
+            return false;
+        }
+        String incomingTaskDesc = incomingTask.getDescription() == null
+                ? ""
+                : incomingTask.getDescription().trim().toLowerCase();
+
+        for (Task existingTask : asUnmodifiableList()) {
+            if (!existingTask.getClass().equals(incomingTask.getClass())) {
+                continue;
+            }
+
+            String taskDesc = existingTask.getDescription() == null
+                    ? ""
+                    : existingTask.getDescription().trim().toLowerCase();
+
+            if (!taskDesc.equals(incomingTaskDesc)) {
+                continue;
+            }
+
+            if (existingTask instanceof Todo) {
+                return true;
+            } else if (existingTask instanceof Deadline && incomingTask instanceof Deadline) {
+                return ((Deadline) existingTask).getBy().isEqual(((Deadline) incomingTask).getBy());
+            } else if (existingTask instanceof Event && incomingTask instanceof Event) {
+                Event te = (Event) existingTask;
+                Event ce = (Event) incomingTask;
+                return te.getFrom().isEqual(ce.getFrom()) && te.getTo().isEqual(ce.getTo());
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         if (tasks.isEmpty()) {

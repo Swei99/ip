@@ -88,7 +88,7 @@ public class WeiWeiBot {
         case "find": {
             String data = rest.trim();
             if (data.isEmpty()) {
-                throw new WeiExceptions("Usage: find <keywords>");
+                throw new WeiExceptions("Usage: find <matching strings in a task description>");
             }
             toRun = new FindCommand(data);
             break;

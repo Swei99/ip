@@ -91,6 +91,20 @@ public class TaskList {
         return Collections.unmodifiableList(tasks);
     }
 
+    /**
+     * Checks whether the given task already exists in this list.
+     *
+     * <p>Two tasks are considered duplicates when they are of the same concrete type and match as follows:
+     * <ul>
+     *   <li><b>Todo</b>: same description (compared case-insensitively after trimming).</li>
+     *   <li><b>Deadline</b>: same description (as above) and the same {@code by} date-time.</li>
+     *   <li><b>Event</b>: same description (as above) and the same {@code from} and {@code to} date-times.</li>
+     * </ul>
+     * Descriptions that are {@code null} are treated as empty strings.</p>
+     *
+     * @param incomingTask the task to check for duplication; if {@code null}, this method returns {@code false}
+     * @return {@code true} if an equivalent task already exists; {@code false} otherwise
+     */
     public boolean isDuplicate(Task incomingTask) {
         if (incomingTask == null) {
             return false;

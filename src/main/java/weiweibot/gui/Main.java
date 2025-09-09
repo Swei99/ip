@@ -37,7 +37,7 @@ public class Main extends Application {
             fxmlLoader.<MainWindow>getController().setBot(weiBot);
             stage.show();
             fxmlLoader.<MainWindow>getController().displayWelcome(
-                "Hello! I'm WeiWeiBot\nWhat can I do for you?\nType 'help' for more commands", introImage);
+                "Hello! I'm WeiWeiBot\nIf you do not keep track of your tasks the comet will destroy the world\nType 'help' for more commands", introImage);
         } catch (IOException e) {
             e.printStackTrace();
         }

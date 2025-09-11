@@ -128,12 +128,15 @@ public class TaskList {
 
             if (existingTask instanceof Todo) {
                 return true;
-            } else if (existingTask instanceof Deadline && incomingTask instanceof Deadline) {
-                return ((Deadline) existingTask).getBy().isEqual(((Deadline) incomingTask).getBy());
-            } else if (existingTask instanceof Event && incomingTask instanceof Event) {
-                Event te = (Event) existingTask;
-                Event ce = (Event) incomingTask;
-                return te.getFrom().isEqual(ce.getFrom()) && te.getTo().isEqual(ce.getTo());
+            } else if (existingTask instanceof Deadline existingDeadline
+                            && incomingTask instanceof Deadline incomingDeadline) {
+                boolean sameBy = existingDeadline.getBy().isEqual(incomingDeadline.getBy());
+                return sameBy;
+            } else if (existingTask instanceof Event existingEvent
+                    && incomingTask instanceof Event incomingEvent) {
+                boolean sameFrom = existingEvent.getFrom().isEqual(incomingEvent.getFrom());
+                boolean sameTo   = existingEvent.getTo().isEqual(incomingEvent.getTo());
+                return sameFrom && sameTo;
             }
         }
         return false;

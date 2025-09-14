@@ -15,17 +15,17 @@ import weiweibot.tasks.TaskList;
  */
 public class MarkCommand extends Command {
     private final int indexZeroBased;
-    private final boolean markValue;
+    private final boolean isMarkValue;
 
     /**
      * Creates a command to mark or unmark a task.
      *
      * @param indexZeroBased zero-based index of the target task
-     * @param markValue {@code true} to mark as done; {@code false} to unmark
+     * @param isMarkValue {@code true} to mark as done; {@code false} to unmark
      */
-    public MarkCommand(int indexZeroBased, boolean markValue) {
+    public MarkCommand(int indexZeroBased, boolean isMarkValue) {
         this.indexZeroBased = indexZeroBased;
-        this.markValue = markValue;
+        this.isMarkValue = isMarkValue;
     }
 
     /**
@@ -37,7 +37,7 @@ public class MarkCommand extends Command {
     @Override
     public String execute(TaskList tasks, Storage storage) {
         Task t = tasks.getTask(indexZeroBased);
-        if (markValue) {
+        if (isMarkValue) {
             t.mark();
         } else {
             t.unmark();
@@ -45,7 +45,7 @@ public class MarkCommand extends Command {
         storage.save(tasks);
 
         StringBuilder returnString = new StringBuilder();
-        returnString.append(markValue
+        returnString.append(isMarkValue
                 ? "Nice! I've marked this task as done:\n"
                 : "OK, I've marked this task as not done yet:\n");
         returnString.append(" " + t + "\n");

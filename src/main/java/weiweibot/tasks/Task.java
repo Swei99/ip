@@ -9,7 +9,7 @@ package weiweibot.tasks;
  */
 public class Task {
     private String description;
-    private boolean marked;
+    private boolean isMark;
 
     /**
      * Creates a task with the given description; initial state is unmarked.
@@ -18,7 +18,7 @@ public class Task {
      */
     public Task(String description) {
         this.description = description;
-        this.marked = false;
+        this.isMark = false;
     }
 
     public String getDescription() {
@@ -34,15 +34,15 @@ public class Task {
     }
 
     public void mark() {
-        this.marked = true;
+        this.isMark = true;
     }
 
     public void unmark() {
-        this.marked = false;
+        this.isMark = false;
     }
 
     @Override
     public String toString() {
-        return String.format("[%s] %s", marked ? "x" : " ", description);
+        return String.format("[%s] %s", isMark ? "x" : " ", description);
     }
 }

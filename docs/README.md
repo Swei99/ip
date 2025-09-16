@@ -12,8 +12,6 @@
 - **Duplicate detection** on add (same type + matching identity)  
 - **Persistent storage** in `data/tasks.txt`  
 - **JavaFX GUI** (`weiweibot.gui.Main`)
-- **JUnit 5** tests  
-
 ---
 
 ## 🚀 Quick Start
@@ -22,6 +20,11 @@
 - **JDK 17+**
 - **Gradle** (wrapper included: `gradlew` / `gradlew.bat`)
 
+### How to start
+- Ensure all pre requisites are settled
+- Download latest `jar` 
+- Place the 'jar' file at the home folder and run command `java -jar WeiWeiBot.jar`
+
 ### Build
 ```bash
 # Windows
@@ -29,8 +32,11 @@
 
 # macOS / Linux
 ./gradlew clean build
+```
 
 ### Usage
+Commands:
+```bash
 todo <description>
 deadline <description> /by <d-M-yyyy [HHmm] | yyyy-MM-dd>
 event <description> /from <d-M-yyyy HHmm> /to <d-M-yyyy HHmm>
@@ -42,3 +48,14 @@ unmark <n>
 delete <n>
 help
 bye
+```
+
+### Examples
+```bash
+todo Buy milk
+deadline Submit report /by 31-12-2025 1800
+event Team meeting /from 1-1-2026 0900 /to 1-1-2026 1030
+find report
+mark 1
+delete 2
+```

@@ -1,30 +1,44 @@
-# Duke User Guide
+# WeiWeiBot
 
-// Update the title above to match the actual product name
+> A tiny Java task-tracking chatbot with and **JavaFX** UI.  
+> Stores tasks to disk, supports todos, deadlines, and events, and prevents duplicates.
 
-// Product screenshot goes here
+---
 
-// Product intro goes here
+## Features ✨
 
-## Adding deadlines
+- Add / list / find / mark / unmark / delete tasks  
+- Three task types: **Todo**, **Deadline**, **Event**  
+- **Duplicate detection** on add (same type + matching identity)  
+- **Persistent storage** in `data/tasks.txt`  
+- **JavaFX GUI** (`weiweibot.gui.Main`)
+- **JUnit 5** tests  
 
-// Describe the action and its outcome.
+---
 
-// Give examples of usage
+## 🚀 Quick Start
 
-Example: `keyword (optional arguments)`
+### Prerequisites
+- **JDK 17+**
+- **Gradle** (wrapper included: `gradlew` / `gradlew.bat`)
 
-// A description of the expected outcome goes here
+### Build
+```bash
+# Windows
+.\gradlew clean build
 
-```
-expected output
-```
+# macOS / Linux
+./gradlew clean build
 
-## Feature ABC
+### Usage
+todo <description>
+deadline <description> /by <d-M-yyyy [HHmm] | yyyy-MM-dd>
+event <description> /from <d-M-yyyy HHmm> /to <d-M-yyyy HHmm>
 
-// Feature details
-
-
-## Feature XYZ
-
-// Feature details
+list
+find <keywords>
+mark <n>
+unmark <n>
+delete <n>
+help
+bye

@@ -4,8 +4,8 @@
 > Stores tasks to disk, supports todos, deadlines, and events, and prevents duplicates.
 
 ---
-
-## Features ✨
+![Screenshot of the weiwei chatbot.](https://swei99.github.io/ip/Ui.png)
+## ✨ Features 
 
 - Add / list / find / mark / unmark / delete tasks  
 - Three task types: **Todo**, **Deadline**, **Event**  
@@ -35,7 +35,6 @@
 ```
 
 ### Usage
-Commands:
 ```bash
 todo <description>
 deadline <description> /by <d-M-yyyy [HHmm] | yyyy-MM-dd>

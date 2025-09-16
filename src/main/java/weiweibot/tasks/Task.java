@@ -30,7 +30,7 @@ public class Task {
     }
 
     public boolean isMarked() {
-        return marked;
+        return isMark;
     }
 
     public void mark() {

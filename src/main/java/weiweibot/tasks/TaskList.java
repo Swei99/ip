@@ -135,7 +135,7 @@ public class TaskList {
             } else if (existingTask instanceof Event existingEvent
                     && incomingTask instanceof Event incomingEvent) {
                 boolean sameFrom = existingEvent.getFrom().isEqual(incomingEvent.getFrom());
-                boolean sameTo   = existingEvent.getTo().isEqual(incomingEvent.getTo());
+                boolean sameTo = existingEvent.getTo().isEqual(incomingEvent.getTo());
                 return sameFrom && sameTo;
             }
         }

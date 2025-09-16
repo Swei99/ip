@@ -7,3 +7,6 @@ A-JUnit
 
 JavaDocs
 - Used GPT 5 Thinking to generate JavaDocs for those functions that i have not done. It seems to be detailed enough, there were some errors, e.g. the params and main description was slightly inaccurate so i just modified it.
+
+New test cases:
+- Used GPT to create a new test case, i gave GPT how my function of is duplicate looks like and it gave me a file containing various test cases. It worked perfectly as how i think it should test. my prompt was "write me one more test case for my current project now for the duplicate function".

@@ -1,0 +1,40 @@
+package weiweibot;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import weiweibot.commands.AddCommand;
+import weiweibot.commands.Command;
+import weiweibot.storage.Storage;
+import weiweibot.tasks.TaskList;
+import weiweibot.tasks.Todo;
+
+class DuplicateAddCommandTest {
+
+    /** No-op storage to avoid filesystem writes during the test. */
+    private static final class NoOpStorage extends Storage {
+        NoOpStorage() { super("build", "test-tmp", "noop.txt"); }
+        @Override public void save(TaskList tasks) { /* no-op */ }
+    }
+
+    @Test
+    void addDuplicateTodo_isVoided() {
+        TaskList tasks = new TaskList();
+        Storage storage = new NoOpStorage();
+
+        // First add succeeds
+        Command add1 = new AddCommand(new Todo("Buy milk"));
+        String msg1 = add1.execute(tasks, storage);
+        assertEquals(1, tasks.getNumberOfTasks());
+        assertTrue(msg1.contains("I've added this task"));
+
+        // Duplicate (same description ignoring case/whitespace) should be rejected
+        Command addDup = new AddCommand(new Todo("  buy MILK  "));
+        String msgDup = addDup.execute(tasks, storage);
+
+        assertEquals(1, tasks.getNumberOfTasks(), "Task count should remain unchanged after duplicate");
+        assertTrue(msgDup.contains("Duplicate task detected"), "Duplicate message should be shown");
+    }
+}
